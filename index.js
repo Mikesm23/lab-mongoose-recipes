@@ -16,8 +16,28 @@ mongoose
     return Recipe.deleteMany()
   })
   .then(() => {
-    // Run your code here, after you have insured that the connection was made
+    const applePie = { title: "ApplePie", cuisine: "American" }
+    
+    Recipe.create( applePie )
+      .then(recipe => console.log('The recipe is saved and its value is: ', recipe))
+
+    Recipe.insertMany( data )
+      .then(data => {data.forEach(function({ title }) {
+        console.log('The recipe is saved and its value is: ', title)
+      })
+        return Recipe.findOneAndUpdate({title : "Rigatoni alla Genovese"}, {duration: 100}, {new: true})
+        
+      }).then((updated) => console.log("Success!" , updated ))
+  .then(() => {
+    Recipe.deleteOne( {title : "Carrot Cake"} )
+      .then((deleted) => {
+        console.log("Success deleting: ", deleted)
+        mongoose.connection.close(() => {
+          console.log('Mongoose default connection disconnected through app termination');
+        });
+      })      
+    })
   })
   .catch(error => {
     console.error('Error connecting to the database', error);
-  });
+  })
